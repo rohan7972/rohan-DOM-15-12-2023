@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Interactive Gallery</title>
+</head>
+<body>
+
+<div class="gallery-item" onclick="showForm()">
+    <img src="images/image1.avif" alt="Image 1">
+</div>
+
+<div class="gallery-item" onclick="displayUserInfo()">
+    <img src="images/image2.jpeg" alt="Image 2">
+</div>
+
+<div class="gallery-item" onclick="rollDice()">
+    <img src="images/dice3.avif" alt="Dice">
+</div>
+
+<div class="gallery-item" onclick="generateCoupon()">
+    <img src="images/images4.jpeg" alt="Image 4">
+</div>
+
+<div class="form-overlay" id="formOverlay">
+    <div class="form-container">
+        <form id="registrationForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" required><br>
+
+            <label for="username">Username:</label>
+            <input type="text" id="username" required><br>
+
+            <button type="button" onclick="registerUser()">Submit</button>
+        </form>
+    </div>
+</div>
+
+<div class="congratulations-overlay" id="congratulationsOverlay">
+    <img src="images/congratulations1.png" alt="Congratulations" class="congratulations-image">
+</div>
+
+<script>
+    let registeredUser = {};
+    let diceRolls = [];
+    let totalDiceSum = 0;
+
+    function showForm() {
+        document.getElementById('formOverlay').style.display = 'flex';
+    }
+
+    function registerUser() {
+        registeredUser.name = document.getElementById('name').value;
+        registeredUser.email = document.getElementById('email').value;
+        registeredUser.username = document.getElementById('username').value;
+
+        document.getElementById('formOverlay').style.display = 'none';
+    }
+
+    function displayUserInfo() {
+        if (registeredUser.name && registeredUser.username) {
+            alert(`Name: ${registeredUser.name}\nUsername: ${registeredUser.username}`);
+        } else {
+            alert("Please register first.");
+        }
+    }
+
+    function rollDice() {
+        if (diceRolls.length < 3) {
+            const roll = Math.floor(Math.random() * 6) + 1;
+            diceRolls.push(roll);
+            totalDiceSum += roll;
+        }
+
+        if (diceRolls.length === 3) {
+            if (totalDiceSum > 10) {
+                alert("You can now click on the 4th image.");
+            } else {
+                alert(" BADLUCK!Try again after scoring more than 10.");
+                resetDice();
+            }
+        }
+    }
+
+    function resetDice() {
+        diceRolls = [];
+        totalDiceSum = 0;
+    }
+
+    function generateCoupon() {
+        if (totalDiceSum > 10 && diceRolls.length === 3) {
+            const couponCode = generateRandomCoupon();
+            alert(`Coupon Code: ${couponCode}`);
+            document.getElementById('congratulationsOverlay').style.display = 'flex';
+        } else {
+            alert("Bad luck. Try again after scoring more than 10.");
+        }
+    }
+
+    function generateRandomCoupon() {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let couponCode = '';
+        for (let i = 0; i < 12; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            couponCode += characters.charAt(randomIndex);
+        }
+        return couponCode;
+    }
+</script>
+
+</body>
+</html>
